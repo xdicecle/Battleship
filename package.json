@@ -1,0 +1,17 @@
+{
+  "devDependencies": {
+    "@babel/preset-env": "^7.29.5",
+    "html-webpack-plugin": "^5.6.7",
+    "jest": "^30.4.2",
+    "webpack": "^5.106.2",
+    "webpack-cli": "^7.0.2",
+    "webpack-dev-server": "^5.2.4"
+  },
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack serve --mode development",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  }
+}
