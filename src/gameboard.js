@@ -49,7 +49,7 @@ export default class Gameboard{
     }
 
     receiveAttack(posY, posX) {
-        if (!this.isInBounds(posY, posX)) return false;
+        if (!this.isInBounds(posY, posX)) return "miss";
 
         const target = this.board[posY][posX];
 
