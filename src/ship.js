@@ -6,10 +6,12 @@ export default class Ship{
         this.sunk = this.isSunk();
     }
 
+    //increases the hit variable
     hit() {
         this.hits += 1;
     }
 
+    //Checks if the ship has been hit as many times or more than its length
     isSunk() {
         if (this.hits >= this.length) return true;
         else return false;

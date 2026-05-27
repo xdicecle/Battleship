@@ -4,7 +4,7 @@ export default class Gameboard{
     constructor() {
         this.board = [];
     }
-
+    //creates a 10 by 10 array of null variables
     createBoard() {
         this.board = Array.from({length: 10}, () => Array(10).fill(null));
     }
