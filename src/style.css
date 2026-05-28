@@ -6,6 +6,10 @@
     transition: all 0.1s ease;
 }
 
+.gameboardPlayer .square:hover, .gameboardComputer .square:hover{
+    cursor: pointer;
+}
+
 #gameboardPlayer, #gameboardComputer{
     width: 30rem;
     height: 30rem;
