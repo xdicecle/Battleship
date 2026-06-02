@@ -17,13 +17,25 @@
       <h1 class="title">Battleship</h1>
     </header>
     <section
-      class="gameContainer container d-flex justify-content-center align-items-center flex-md-row flex-column gap-5"
+      class="gameContainer container d-flex justify-content-center align-items-center flex-md-row flex-column gap-5 pt-3"
     >
-      <div id="gameboardPlayer" class="d-flex flex-wrap">
+      <div class="gameboardContainer">
+        <h2 class="text-center">Player's Board</h2>
+
+        <div id="gameboardPlayer" class="d-flex flex-wrap">
+
+        </div>
 
       </div>
-      <div id="gameboardComputer" class="d-flex flex-wrap">
 
+      <div class="gameboardContainer">
+        <h2 class="text-center">Computer's Board</h2>
+
+        <div id="gameboardComputer" class="d-flex flex-wrap rounded-5"> </div>
+      </div>
+
+      <div id="attackAccuracyContainer" class=" d-flex flex-column gap-3">
+        <h2>Attack Accuracy: <span id="attackAccuracy"></span></h2>
       </div>
     </section>
   </body>

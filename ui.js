@@ -1,38 +1,44 @@
-//imports
-import Gameboard from "./src/gameboard";
-import Ship from "./src/ship";
+// UI target for attack accuracy text
+const accuracyDisplay = document.querySelector("#attackAccuracy");
 
-// Adds 100 boxes to the gameboard containers
-export function createGameBoard(board) {
+// Builds a 10x10 grid of clickable squares for a board
+export function createGameBoard(board, gameBoard, onPlayerTurnComplete) {
   for (let y = 0; y < 10; y++) {
     for (let x = 0; x < 10; x++) {
       const inputBox = document.createElement("button");
       inputBox.className = "square";
 
-      // change button colors on hover
+      // Subtle hover scale to show focus
       inputBox.addEventListener("mouseover", (e) => {
-        e.target.style.backgroundColor = "grey";
+        e.target.style.scale = 1.1;
       });
       inputBox.addEventListener("mouseout", (e) => {
-        e.target.style.backgroundColor = "";
+        e.target.style.scale = 1;
       });
 
-      // assign data attributes to identify boxes
+      // Store grid coordinates on the element
       inputBox.dataset.x = x;
       inputBox.dataset.y = y;
 
-      inputBox.addEventListener("click", (e) => {
+      // Click handler reads coords and forwards to game logic
+      const click = (e) => {
         const x = Number(e.currentTarget.dataset.x);
         const y = Number(e.currentTarget.dataset.y);
 
-        console.log("board position:", y, x);
-      });
+        console.log(squareCLicked(y, x, board, gameBoard));
+        
+        onPlayerTurnComplete();
+      };
+
+      // Only allow one click per square
+      inputBox.addEventListener("click", click, { once: true });
 
       board.appendChild(inputBox);
     }
   }
 }
 
+// Paints a placed ship on the UI board
 function displayShip(posY, posX, length, orientation, board) {
   if (orientation === "vertical") {
     for (let y = posY; y < posY + length; y++) {
@@ -47,8 +53,22 @@ function displayShip(posY, posX, length, orientation, board) {
   }
 }
 
+// Places a ship in the model and mirrors it on the UI
 export function placeShip(posY, posX, length, orientation, board, gameBoard) {
   if (!gameBoard.placeShip(posY, posX, length, orientation)) return false;
 
   displayShip(posY, posX, length, orientation, board);
+}
+
+// Handles a click on a square and updates UI + accuracy
+export function squareCLicked(y, x, board, gameBoard) {
+  const box = board.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+  box.style.backgroundColor = "black";
+
+  displayAccuracy(gameBoard.receiveAttack(y, x));
+}
+
+// Writes attack accuracy text to the UI
+function displayAccuracy(str) {
+  accuracyDisplay.textContent = str;
 }
