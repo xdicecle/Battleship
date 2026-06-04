@@ -15,9 +15,6 @@
   <body>
     <header class="d-flex justify-content-center align-items-center pt-5">
       <h1 class="title">Battleship</h1>
-      <button id="resetGameButton" class="btn btn-secondary ms-2">Reset Game</button>
-      <button id="randomizeBoardsButton" class="btn btn-secondary ms-2">
-        Randomize Boards
     </header>
     <section
       class="gameContainer container d-flex justify-content-center align-items-center flex-md-row flex-column gap-5 pt-3"
@@ -39,7 +36,12 @@
       </div>
     </section>
 
-    <div class="modal fade" id="gameOverWinModal" tabindex="-1" aria-hidden="true">
+    <div
+      class="modal fade"
+      id="gameOverWinModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
       <div class="modal-dialog">
         <div class="modal-content rounded-4">
           <div class="modal-header">
@@ -55,12 +57,23 @@
             <button class="btn btn-secondary" data-bs-dismiss="modal">
               Close
             </button>
+            <button
+              class="btn btn-primary randomizeBoardsButton"
+              data-bs-dismiss="modal"
+            >
+              Randomize Boards
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="modal fade" id="gameOverLoseModal" tabindex="-1" aria-hidden="true">
+    <div
+      class="modal fade"
+      id="gameOverLoseModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
       <div class="modal-dialog">
         <div class="modal-content rounded-4">
           <div class="modal-header">
@@ -75,6 +88,12 @@
           <div class="modal-footer">
             <button class="btn btn-secondary" data-bs-dismiss="modal">
               Close
+            </button>
+            <button
+              class="btn btn-primary randomizeBoardsButton"
+              data-bs-dismiss="modal"
+            >
+              Randomize Boards
             </button>
           </div>
         </div>

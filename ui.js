@@ -8,7 +8,12 @@ const winModal = new bootstrap.Modal(modalWinEl);
 const accuracyDisplay = document.querySelector("#attackAccuracy");
 
 // Builds a 10x10 grid of clickable squares for a board
-export function createGameBoard(board, gameBoard, onPlayerTurnComplete, player) {
+export function createGameBoard(
+  board,
+  gameBoard,
+  onPlayerTurnComplete,
+  player,
+) {
   for (let y = 0; y < 10; y++) {
     for (let x = 0; x < 10; x++) {
       const inputBox = document.createElement("button");
@@ -34,14 +39,13 @@ export function createGameBoard(board, gameBoard, onPlayerTurnComplete, player) 
         console.log(squareCLicked(y, x, board, gameBoard));
 
         setTimeout(() => {
-          console.log(onPlayerTurnComplete()
-          )
+          console.log(onPlayerTurnComplete());
         }, 300);
 
         if (gameBoard.checkShips()) {
           if (player === "player")
             displayGameResults(true, winModal, loseModal);
-          else if(player === "computer") {
+          else if (player === "computer") {
             displayGameResults(false, winModal, loseModal);
           }
         }
@@ -75,6 +79,7 @@ export function placeShip(posY, posX, length, orientation, board, gameBoard) {
   if (!gameBoard.placeShip(posY, posX, length, orientation)) return false;
 
   displayShip(posY, posX, length, orientation, board);
+  return true;
 }
 
 // Handles a click on a square and updates UI + accuracy
@@ -86,8 +91,7 @@ export function squareCLicked(y, x, board, gameBoard) {
 
   if (result == "Miss") {
     box.style.backgroundColor = "black";
-  }
-  else if (result == "Hit") {
+  } else if (result == "Hit") {
     box.style.backgroundColor = "blue";
   }
 

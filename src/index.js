@@ -1,5 +1,4 @@
 // Imports
-import Ship from "./ship";
 import Gameboard from "./gameboard";
 import Player from "../player";
 import "./style.css";
@@ -8,11 +7,12 @@ import { createGameBoard, placeShip, squareCLicked } from "../ui";
 // Initialize UI nodes and game state
 const playerBoard = document.getElementById("gameboardPlayer");
 const computerBoard = document.getElementById("gameboardComputer");
-const resetButton = document.getElementById("resetGameButton");
-const randomizeButton = document.getElementById("randomizeBoardsButton");
+const randomizeButtons = document.querySelectorAll(".randomizeBoardsButton");
+const accuracyDisplay = document.getElementById("attackAccuracy");
 const playerGameBoard = new Gameboard();
 const computerGameBoard = new Gameboard();
 const computer = new Player("computer");
+const shipLengths = [4, 3, 2, 2];
 
 //function for computer attacks
 function computerAttack() {
@@ -21,22 +21,79 @@ function computerAttack() {
 }
 function playerAttack() {}
 
-// Create and display game boards
-createGameBoard(playerBoard, playerGameBoard, playerAttack, "computer");
-createGameBoard(computerBoard, computerGameBoard, computerAttack, "player");
+function resetComputerTracking() {
+  computer.cords.clear();
+  computer.hit = false;
+}
 
-// Initialize board grids
-playerGameBoard.createBoard();
-computerGameBoard.createBoard();
+function rebuildBoards() {
+  playerBoard.innerHTML = "";
+  computerBoard.innerHTML = "";
+  createGameBoard(playerBoard, playerGameBoard, playerAttack, "computer");
+  createGameBoard(computerBoard, computerGameBoard, computerAttack, "player");
+}
 
-// Place ships on player's board
-placeShip(0, 0, 4, "horizontal", playerBoard, playerGameBoard); // Battleship
-placeShip(2, 0, 3, "horizontal", playerBoard, playerGameBoard); // Cruiser
-placeShip(4, 0, 2, "vertical", playerBoard, playerGameBoard); // Destroyer
-placeShip(6, 0, 2, "horizontal", playerBoard, playerGameBoard); // Submarine
+function randomOrientation() {
+  return Math.random() < 0.5 ? "horizontal" : "vertical";
+}
 
-// Place ships on computer's gameboard
-computerGameBoard.placeShip(1, 1, 4, "vertical"); //battleship
-computerGameBoard.placeShip(1, 3, 3, "horizontal"); // Cruiser
-computerGameBoard.placeShip(4, 9, 4, "vertical"); // Destroyer
-computerGameBoard.placeShip(7, 5, 2, "horizontal"); // Submarine
+function placeShipsRandomly(gameBoard, board, shouldDisplay) {
+  const maxAttempts = 100;
+
+  for (let i = 0; i < shipLengths.length; i++) {
+    const length = shipLengths[i];
+    let placed = false;
+
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      const y = Math.floor(Math.random() * 10);
+      const x = Math.floor(Math.random() * 10);
+      const orientation = randomOrientation();
+
+      if (shouldDisplay) {
+        if (placeShip(y, x, length, orientation, board, gameBoard)) {
+          placed = true;
+          break;
+        }
+      } else if (gameBoard.placeShip(y, x, length, orientation)) {
+        placed = true;
+        break;
+      }
+    }
+
+    if (!placed) return false;
+  }
+
+  return true;
+}
+
+function randomizeBoards() {
+  const maxRuns = 20;
+
+  for (let run = 0; run < maxRuns; run++) {
+    playerGameBoard.createBoard();
+    computerGameBoard.createBoard();
+    resetComputerTracking();
+    rebuildBoards();
+
+    const playerPlaced = placeShipsRandomly(playerGameBoard, playerBoard, true);
+    const computerPlaced = placeShipsRandomly(
+      computerGameBoard,
+      computerBoard,
+      false,
+    );
+
+    if (playerPlaced && computerPlaced) {
+      if (accuracyDisplay) accuracyDisplay.textContent = "";
+      return true;
+    }
+  }
+
+  console.warn("Failed to randomize boards after multiple attempts.");
+  return false;
+}
+
+randomizeButtons.forEach((button) => {
+  button.addEventListener("click", randomizeBoards);
+});
+
+randomizeBoards();
