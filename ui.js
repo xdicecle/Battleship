@@ -1,8 +1,14 @@
+//Modal Imports
+const modalLoseEl = document.getElementById("gameOverLoseModal");
+const loseModal = new bootstrap.Modal(modalLoseEl);
+const modalWinEl = document.getElementById("gameOverWinModal");
+const winModal = new bootstrap.Modal(modalWinEl);
+
 // UI target for attack accuracy text
 const accuracyDisplay = document.querySelector("#attackAccuracy");
 
 // Builds a 10x10 grid of clickable squares for a board
-export function createGameBoard(board, gameBoard, onPlayerTurnComplete) {
+export function createGameBoard(board, gameBoard, onPlayerTurnComplete, player) {
   for (let y = 0; y < 10; y++) {
     for (let x = 0; x < 10; x++) {
       const inputBox = document.createElement("button");
@@ -26,8 +32,19 @@ export function createGameBoard(board, gameBoard, onPlayerTurnComplete) {
         const y = Number(e.currentTarget.dataset.y);
 
         console.log(squareCLicked(y, x, board, gameBoard));
-        
-        onPlayerTurnComplete();
+
+        setTimeout(() => {
+          console.log(onPlayerTurnComplete()
+          )
+        }, 300);
+
+        if (gameBoard.checkShips()) {
+          if (player === "player")
+            displayGameResults(true, winModal, loseModal);
+          else if(player === "computer") {
+            displayGameResults(false, winModal, loseModal);
+          }
+        }
       };
 
       // Only allow one click per square
@@ -63,12 +80,26 @@ export function placeShip(posY, posX, length, orientation, board, gameBoard) {
 // Handles a click on a square and updates UI + accuracy
 export function squareCLicked(y, x, board, gameBoard) {
   const box = board.querySelector(`[data-x="${x}"][data-y="${y}"]`);
-  box.style.backgroundColor = "black";
+  const result = gameBoard.receiveAttack(y, x);
 
-  displayAccuracy(gameBoard.receiveAttack(y, x));
+  displayAccuracy(result);
+
+  if (result == "Miss") {
+    box.style.backgroundColor = "black";
+  }
+  else if (result == "Hit") {
+    box.style.backgroundColor = "blue";
+  }
+
+  return result;
 }
 
 // Writes attack accuracy text to the UI
 function displayAccuracy(str) {
   accuracyDisplay.textContent = str;
+}
+
+export function displayGameResults(result, winModal, loseModal) {
+  if (result) winModal.show();
+  else if (!result) loseModal.show();
 }
